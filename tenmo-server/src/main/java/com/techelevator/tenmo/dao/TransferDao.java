@@ -1,6 +1,9 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface TransferDao {
 
@@ -9,6 +12,6 @@ public interface TransferDao {
     String approve(Long transferId, int code);
     BigDecimal deposit(Long accountId, BigDecimal amount);
     BigDecimal deduct(Long accountId, BigDecimal amount);
-    String addToTransferHistory();
+    List<Transfer> getTransferHistory(Long accountId);
 
 }

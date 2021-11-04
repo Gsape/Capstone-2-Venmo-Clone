@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.tenmo.model.Transfer;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 
 public class JdbcTransferDao implements TransferDao{
@@ -23,6 +26,13 @@ public class JdbcTransferDao implements TransferDao{
         BigDecimal newFromBalance = deduct(accountFrom, amount);
         // deposit in acceptee
         BigDecimal newToBalance = deposit(accountTo, amount);
+        // add to transfers table in db
+        String sql = "INSERT INTO transfers VALUES (DEFAULT, 2, 2, ?, ?, ?)";
+        try {
+            jdbcTemplate.update(sql, accountFrom, accountTo, amount);
+        } catch (DataAccessException e){
+            return "Error occured at request";
+        }
         // return String of new balances
         return "Account: " + accountFrom + " has a balance of $" + newFromBalance +
                 " and Account: " + accountTo + " has a balance of $" + newToBalance;
@@ -102,11 +112,15 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public String addToTransferHistory() {
-        // need to create an object that has a list of transactions
-        // add each transaction to the list
-        String sql = "";
-        return null;
+    public List<Transfer> getTransferHistory(Long accountId) {
+        List<Transfer> transferHistory = new ArrayList<>();
+        String sql = "SELECT * FROM transfers WHERE account_from = ? OR account_to = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+        while (results.next()){
+            Transfer transfer = mapRowToTransfer(results);
+            transferHistory.add(transfer);
+        }
+        return transferHistory;
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rowset){

@@ -22,6 +22,16 @@ public class Transfer {
     public Transfer() {
     }
 
+    @Override
+    public String toString(){
+        return "Transfer{" + "id=" + transferID +
+                ", transferTypeID=" + transferTypeID +
+                ", transferStatusID=" + transferStatusID +
+                ", accountFrom=" + accountFrom +
+                ", accountTo=" + accountTo +
+                ", amount=$" + amount + "}";
+    }
+
     public Long getTransferID() {
         return transferID;
     }
