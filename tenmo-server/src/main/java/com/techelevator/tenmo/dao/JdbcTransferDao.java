@@ -1,16 +1,31 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import com.techelevator.tenmo.model.Transfer;
 import java.math.BigDecimal;
+import com.techelevator.tenmo.dao.JdbcAccountDao;
 
 public class JdbcTransferDao implements TransferDao{
-    @Override
-    public boolean send(BigDecimal amount, Long ) {
-        // deduct from originator
-        String sql = "UPDATE accounts SET balance = ? WHERE user_id";
 
+    private JdbcTemplate jdbcTemplate;
+    private JdbcAccountDao jdbcAccountDao;
+
+    public JdbcTransferDao(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public String send(BigDecimal amount, Long accountFrom, Long accountTo) {
+        // deduct from originator
+        BigDecimal newFromBalance = deduct(accountFrom, amount);
         // deposit in acceptee
-        String sql2 = "UPDATE accounts SET balance = ? WHERE user_id";
-        return false;
+        BigDecimal newToBalance = deposit(accountTo, amount);
+        // return String of new balances
+        return "Account: " + accountFrom + " has a balance of $" + newFromBalance +
+                " and Account: " + accountTo + " has a balance of $" + newToBalance;
     }
 
     @Override
@@ -24,23 +39,66 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public boolean approve() {
+    public String approve(Long transferId, int code) {
         // change transfer status in transfer table of db to approved
-        String sql = "";
-        return false;
+        Transfer transfer = new Transfer();
+        String sql = "UPDATE transfers SET transfer_status_id = ? WHERE transfer_id = ?";
+        int success = 0;
+        try {
+            success = jdbcTemplate.update(sql, code, transferId);
+        } catch (DataAccessException e){
+            return "Error occured at request";
+        }
+        if (success==0){
+            return "Transfer Approved!";
+        } else {
+            return "This transfer was rejected.";
+        }
     }
 
     @Override
-    public BigDecimal deposit() {
-        String sql = "";
-        return null;
+    public BigDecimal deposit(Long accountId, BigDecimal amount) {
+        // data validation
+        if (amount == null || amount.equals(0.00) || amount.compareTo(BigDecimal.ZERO)<0){
+            return null; // should throw an exception/error instead?
+        }
+        // set up account info
+        Account account = new Account();
+        account = jdbcAccountDao.getAccountInfo(accountId);
+        // calculate new balance
+        BigDecimal newBalance = account.getBalance().add(amount);
+        // update database
+        String sql = "UPDATE accounts SET balance = ? WHERE user_id = ?";
+        try {
+            int success = jdbcTemplate.update(sql, newBalance, accountId);
+        } catch (DataAccessException e) {
+            return null;
+        }
+        // confirm that db balance is equal to new balance
+        return account.getBalance();
     }
 
     @Override
-    public BigDecimal deduct() {
-        // called during
-        String sql = "";
-        return null;
+    public BigDecimal deduct(Long accountId, BigDecimal amount) {
+        // set up account info
+        Account account = new Account();
+        account = jdbcAccountDao.getAccountInfo(accountId);
+        // data validation
+        if ((amount.compareTo(account.getBalance())>0) || amount == null || amount.equals(0.00) ||
+                amount.compareTo(BigDecimal.ZERO)<0){
+            return null; // actually I want this to throw an exception or something, essentially prevent it from happening
+        }
+        // calculate new balance
+        BigDecimal newBalance = account.getBalance().subtract(amount);
+        // update database
+        String sql = "UPDATE accounts SET balance = ? WHERE user_id = ?";
+        try {
+            int success = jdbcTemplate.update(sql, newBalance, accountId);
+        } catch (DataAccessException e) {
+            return null;
+        }
+        // confirm that db balance is equal to new balance
+        return account.getBalance();
     }
 
     @Override
@@ -50,4 +108,16 @@ public class JdbcTransferDao implements TransferDao{
         String sql = "";
         return null;
     }
+
+    private Transfer mapRowToTransfer(SqlRowSet rowset){
+        Transfer transfer = new Transfer();
+        transfer.setTransferID(rowset.getLong("transfer_id"));
+        transfer.setTransferTypeID(rowset.getInt("transfer_type_id"));
+        transfer.setTransferStatusID(rowset.getInt("transfer_status_id"));
+        transfer.setAccountFrom(rowset.getLong("account_from"));
+        transfer.setAccountTo(rowset.getLong("account_to"));
+        transfer.setAmount(rowset.getBigDecimal("amount"));
+        return transfer;
+    }
+
 }

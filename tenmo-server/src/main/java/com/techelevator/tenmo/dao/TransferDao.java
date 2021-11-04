@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public interface TransferDao {
 
-    boolean send();
+    String send(BigDecimal amount, Long accountFrom, Long accountTo);
     boolean request();
-    boolean approve();
-    BigDecimal deposit();
-    BigDecimal deduct();
+    String approve(Long transferId, int code);
+    BigDecimal deposit(Long accountId, BigDecimal amount);
+    BigDecimal deduct(Long accountId, BigDecimal amount);
     String addToTransferHistory();
 
 }
