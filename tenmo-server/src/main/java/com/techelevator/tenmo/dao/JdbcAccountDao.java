@@ -4,6 +4,7 @@ import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,12 @@ public class JdbcAccountDao implements AccountDao {
         if (row.next()){
             return mapRowToAccount(row);
         }
-        return null; // I want to change this
-        //throw new AccountNotFoundException("Account " + accountId + "not found");
+        return null;
     }
 
     @Override
-    public Long getAccountFromUserId(long userId) {
-       String sql = "SELECT account_id FROM accounts WHERE user_id = ?;"; // I don't remember if I'm doing this correct
+    public Long getAccountIdFromUserId(long userId) {
+       String sql = "SELECT account_id FROM accounts WHERE user_id = ?;";
        Long id = jdbcTemplate.queryForObject(sql, long.class, userId);
        if( id != null) {
            return id;
@@ -51,17 +51,20 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal getBalance(BigDecimal balance) {
+    public BigDecimal getBalance(long accountId) {
         String sql = "SELECT balance FROM accounts WHERE account_id = ?;";
-        BigDecimal amount = jdbcTemplate.queryForObject(sql, BigDecimal.class, balance);
-        return amount; //I think we should check for null here
+        BigDecimal amount = jdbcTemplate.queryForObject(sql, BigDecimal.class, accountId);
+        if (amount == null || amount.compareTo(BigDecimal.ZERO)<0){
+            return null; // should throw an exception/error instead?
+        }
+        return amount;
     }
 
-    @Override
-    public void updateBalance(long accountId, Account account) {
-        String sql = "UPDATE accounts SET balance WHERE account_id = ?;";
-        jdbcTemplate.update(sql, account.getBalance()); // I feel like this is wrong
-    }
+//    @Override
+//    public void updateBalance(long accountId, Account account) {
+//        String sql = "UPDATE accounts SET balance WHERE account_id = ?;";
+//        jdbcTemplate.update(sql, account.getBalance()); // I feel like this is wrong
+//    }
 
     private Account mapRowToAccount(SqlRowSet asr) {
         Account account = new Account();

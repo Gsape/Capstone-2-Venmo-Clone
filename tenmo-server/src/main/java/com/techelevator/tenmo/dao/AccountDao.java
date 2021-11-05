@@ -11,10 +11,10 @@ public interface AccountDao {
 
     Account getAccountInfo(long accountId); // maybe an int?
 
-    Long getAccountFromUserId(long userId);
+    Long getAccountIdFromUserId(long userId);
 
-    BigDecimal getBalance(BigDecimal balance);
+    BigDecimal getBalance(long accountId);
 
-    void updateBalance(long accountId, Account account); // maybe make a boolean to see if it was successful
+    //void updateBalance(long accountId, Account account); // maybe make a boolean to see if it was successful
 
 }
