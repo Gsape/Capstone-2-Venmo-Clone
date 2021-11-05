@@ -32,7 +32,7 @@ public class TestJdbcTransferDao {
     @Before
     public void setup(){
         jdbcTemplate = new JdbcTemplate(dataSource);
-        sut = new JdbcTransferDao(jdbcTemplate);
+        sut = new JdbcTransferDao(jdbcTemplate, accountDao);
         userDao.create("test1", "happy");
         userDao.create("test2", "sad");
         test1ID = userDao.findIdByUsername("test1");

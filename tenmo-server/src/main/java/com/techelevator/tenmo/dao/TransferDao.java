@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransferDao {
 
-    String send(BigDecimal amount, Long accountFrom, Long accountTo);
+    int send(BigDecimal amount, Long accountFrom, Long accountTo);
     boolean request();
     String approve(Long transferId, int code);
     BigDecimal deposit(Long accountId, BigDecimal amount);
