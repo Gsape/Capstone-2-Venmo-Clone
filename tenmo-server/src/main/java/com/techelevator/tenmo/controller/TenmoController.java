@@ -44,4 +44,16 @@ public class TenmoController {
         return transferDao.getTransferHistory(accountId);
     }
     //I feel like there could be some ambiguity with accountId or maybe I'm just confused like usual lol
+
+    // POST new transfer
+    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    public String transferDetails(@PathVariable BigDecimal amount, @PathVariable Long accountFrom, @PathVariable Long accountTo){
+        return transferDao.send(amount, accountFrom, accountTo);
+    }
+
+    // GET individual transfer details
+    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+    public Transfer getSingleTransferDetails(Long transferId){
+        return transferDao.getSingleTransferDetails(transferId);
+    }
 }

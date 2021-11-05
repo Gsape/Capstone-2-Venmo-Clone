@@ -123,6 +123,17 @@ public class JdbcTransferDao implements TransferDao{
         return transferHistory;
     }
 
+    @Override
+    public Transfer getSingleTransferDetails(Long transferId){
+        Transfer singleTransfer = new Transfer();
+        String sql = "SELECT * FROM transfers WHERE transfer_id = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
+        if (result.next()){
+            singleTransfer = mapRowToTransfer(result);
+        }
+        return singleTransfer;
+    }
+
     private Transfer mapRowToTransfer(SqlRowSet rowset){
         Transfer transfer = new Transfer();
         transfer.setTransferID(rowset.getLong("transfer_id"));
