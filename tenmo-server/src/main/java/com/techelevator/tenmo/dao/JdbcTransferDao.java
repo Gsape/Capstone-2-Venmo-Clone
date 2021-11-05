@@ -30,10 +30,10 @@ public class JdbcTransferDao implements TransferDao{
         // deposit in acceptee
         BigDecimal newToBalance = deposit(accountTo, amount);
         // add to transfers table in db
-        String sql = "INSERT INTO transfers OUTPUT transfer_id VALUES (DEFAULT, 2, 2, ?, ?, ?)";
+        String sql = "INSERT INTO transfers VALUES (DEFAULT, 2, 2, ?, ?, ?) RETURNING transfer_id";
         int transferId = 0;
         try {
-            transferId = jdbcTemplate.update(sql, accountFrom, accountTo, amount);
+            transferId = jdbcTemplate.queryForObject(sql, int.class, accountFrom, accountTo, amount);
         } catch (DataAccessException e){
             return transferId;
         }
@@ -127,10 +127,11 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public Transfer getSingleTransferDetails(Long transferId){
+    public Transfer getSingleTransferDetails(Long accountId, Long transferId){
         Transfer singleTransfer = new Transfer();
-        String sql = "SELECT * FROM transfers WHERE transfer_id = ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
+        String sql = "SELECT * FROM transfers JOIN accounts ON account_id = account_from OR account_id = account_to " +
+                "WHERE account_id = ? AND transfer_id = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId, transferId);
         if (result.next()){
             singleTransfer = mapRowToTransfer(result);
         }
