@@ -13,6 +13,6 @@ public interface TransferDao {
     BigDecimal deposit(Long accountId, BigDecimal amount);
     BigDecimal deduct(Long accountId, BigDecimal amount);
     List<Transfer> getTransferHistory(Long accountId);
-    Transfer getSingleTransferDetails(Long transferId);
+    Transfer getSingleTransferDetails(Long accountId, Long transferId);
 
 }

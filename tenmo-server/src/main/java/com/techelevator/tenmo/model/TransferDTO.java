@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 public class TransferDTO {
     private BigDecimal amount;
-    private Long accountFrom;
-    private Long accountTo;
+    private String fromUser;
+    private String toUser;
 
     public BigDecimal getAmount() {
         return amount;
@@ -16,28 +16,28 @@ public class TransferDTO {
         this.amount = amount;
     }
 
-    public Long getAccountFrom() {
-        return accountFrom;
+    public String getFromUser() {
+        return fromUser;
     }
 
-    public void setAccountFrom(Long accountFrom) {
-        this.accountFrom = accountFrom;
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
     }
 
-    public Long getAccountTo() {
-        return accountTo;
+    public String getToUser() {
+        return toUser;
     }
 
-    public void setAccountTo(Long accountTo) {
-        this.accountTo = accountTo;
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
     }
 
     @Override
     public String toString() {
         return "TransferDTO{" +
                 "amount=$" + amount +
-                ", accountFrom='" + accountFrom + '\'' +
-                ", accountTo='" + accountTo + '\'' +
+                ", accountFrom='" + fromUser + '\'' +
+                ", accountTo='" + toUser + '\'' +
                 '}';
     }
 }
