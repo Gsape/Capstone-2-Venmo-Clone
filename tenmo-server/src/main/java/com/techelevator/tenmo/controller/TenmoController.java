@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -38,7 +39,7 @@ public class TenmoController {
 
     //getting individual balance
     @RequestMapping(path = "/account", method = RequestMethod.GET)
-        public BigDecimal accountBalance(Principal username) {
+        public BigDecimal accountBalance(Principal username) throws AccountNotFoundException {
             if (username == null){
                 throw new RuntimeException();
             }
