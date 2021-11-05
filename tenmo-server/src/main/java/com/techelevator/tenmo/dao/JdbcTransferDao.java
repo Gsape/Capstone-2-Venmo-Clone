@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.techelevator.tenmo.dao.JdbcAccountDao;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JdbcTransferDao implements TransferDao{
 
     private JdbcTemplate jdbcTemplate;
