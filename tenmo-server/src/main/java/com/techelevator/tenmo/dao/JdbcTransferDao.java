@@ -18,26 +18,27 @@ public class JdbcTransferDao implements TransferDao{
     private JdbcTemplate jdbcTemplate;
     private JdbcAccountDao jdbcAccountDao;
 
-    public JdbcTransferDao(JdbcTemplate jdbcTemplate){
+    public JdbcTransferDao(JdbcTemplate jdbcTemplate, JdbcAccountDao jdbcAccountDao){
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcAccountDao = jdbcAccountDao;
     }
 
     @Override
-    public String send(BigDecimal amount, Long accountFrom, Long accountTo) {
+    public int send(BigDecimal amount, Long accountFrom, Long accountTo) {
         // deduct from originator
         BigDecimal newFromBalance = deduct(accountFrom, amount);
         // deposit in acceptee
         BigDecimal newToBalance = deposit(accountTo, amount);
         // add to transfers table in db
-        String sql = "INSERT INTO transfers VALUES (DEFAULT, 2, 2, ?, ?, ?)";
+        String sql = "INSERT INTO transfers OUTPUT transfer_id VALUES (DEFAULT, 2, 2, ?, ?, ?)";
+        int transferId = 0;
         try {
-            jdbcTemplate.update(sql, accountFrom, accountTo, amount);
+            transferId = jdbcTemplate.update(sql, accountFrom, accountTo, amount);
         } catch (DataAccessException e){
-            return "Error occured at request";
+            return transferId;
         }
-        // return String of new balances
-        return "Account: " + accountFrom + " has a balance of $" + newFromBalance +
-                " and Account: " + accountTo + " has a balance of $" + newToBalance;
+        // return the id of the new transfer created
+        return transferId;
     }
 
     @Override

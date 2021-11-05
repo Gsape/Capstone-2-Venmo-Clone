@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 
 public class Transfer {
+    @NotEmpty
     private Long transferID;
     private int transferTypeID;
     private int transferStatusID;
@@ -11,6 +14,7 @@ public class Transfer {
     private Long accountFrom;
     @NotEmpty
     private Long accountTo;
+    @NotEmpty
     private BigDecimal amount;
 
     public Transfer(Long transferID, int transferTypeID, int transferStatusID, Long accountFrom, Long accountTo, BigDecimal amount) {
