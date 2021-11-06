@@ -41,7 +41,7 @@ public class TenmoController {
     @RequestMapping(path = "/account", method = RequestMethod.GET)
         public BigDecimal accountBalance(Principal username) throws AccountNotFoundException {
             if (username == null){
-                throw new RuntimeException();
+                throw new AccountNotFoundException("hello");
             }
             String userName = username.getName();
             int userId = userDao.findIdByUsername(userName);
