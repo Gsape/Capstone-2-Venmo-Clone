@@ -1,11 +1,13 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.exception.TransferNotFoundException;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class JdbcAccountDao implements AccountDao {
         if (row.next()){
             return mapRowToAccount(row);
         }
-        return null;
+         return null; //throw new AccountNotFoundException();
     }
 
     @Override
@@ -53,11 +55,11 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal getBalance(long accountId) {
+    public BigDecimal getBalance(long accountId) throws AccountNotFoundException {
         String sql = "SELECT balance FROM accounts WHERE account_id = ?;";
         BigDecimal amount = jdbcTemplate.queryForObject(sql, BigDecimal.class, accountId);
         if (amount == null || amount.compareTo(BigDecimal.ZERO)<0){
-            return null; // should throw an exception/error instead?
+            throw new AccountNotFoundException();
         }
         return amount;
     }
