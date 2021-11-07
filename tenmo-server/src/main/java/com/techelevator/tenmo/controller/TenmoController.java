@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-//@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class TenmoController {
 
     private final UserDao userDao;
