@@ -10,8 +10,6 @@ public class Transfer {
     private Long accountFrom;
     private Long accountTo;
     private BigDecimal amount;
-    private String fromUsername;
-    private String toUsername;
 
     public Transfer(Long transferID, int transferTypeID, int transferStatusID, Long accountFrom, Long accountTo, BigDecimal amount) {
         this.transferID = transferID;
@@ -41,22 +39,6 @@ public class Transfer {
         } else {
             return "Rejected";
         }
-    }
-
-    public String getFromUsername() {
-        return fromUsername;
-    }
-
-    public void setFromUsername(String fromUsername) {
-        this.fromUsername = fromUsername;
-    }
-
-    public String getToUsername() {
-        return toUsername;
-    }
-
-    public void setToUsername(String toUsername) {
-        this.toUsername = toUsername;
     }
 
     public Long getTransferID() {
