@@ -63,7 +63,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
 			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
-				sendBucks();
+				sendBucks(currentUser);
 			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
 				requestBucks();
 			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
@@ -97,14 +97,14 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		System.out.println("What would you like to do next?");
 	}
 
-	private void sendBucks() {
+	private void sendBucks(AuthenticatedUser currentUser) {
 		User[] results = transferService.listUsers();
 		for (User element : results){
 			Integer id = element.getId();
 			String name = element.getUsername();
 			System.out.println(id + ": " + name);
 		}
-		
+		transferService.sendBucks(currentUser);
 	}
 
 	private void requestBucks() {
