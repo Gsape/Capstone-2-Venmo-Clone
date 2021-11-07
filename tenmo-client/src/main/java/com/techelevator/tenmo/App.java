@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -73,17 +74,23 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewCurrentBalance() {
     	System.out.println("Your current TEBucks balance is: $" + transferService.balance());
-		System.out.println("What would you like to do next?");
+		System.out.println();
+    	System.out.println("What would you like to do next?");
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		Transfer[] results = transferService.viewTransferHistory();
+		for (Transfer element : results){
+			System.out.println(element.toString());
+		}
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("This feature is not active at this time.");
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 
 	private void sendBucks() {
@@ -97,8 +104,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("This feature is not active at this time.");
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 	
 	private void exitProgram() {

@@ -10,6 +10,8 @@ public class Transfer {
     private Long accountFrom;
     private Long accountTo;
     private BigDecimal amount;
+    private String fromUsername;
+    private String toUsername;
 
     public Transfer(Long transferID, int transferTypeID, int transferStatusID, Long accountFrom, Long accountTo, BigDecimal amount) {
         this.transferID = transferID;
@@ -21,7 +23,41 @@ public class Transfer {
     }
 
     public Transfer(){
-    };
+    }
+
+    public String getTypeWord(int type){
+        if (type == 2){
+            return "sent";
+        } else {
+            return "requested";
+        }
+    }
+
+    public String getStatusWord(int status){
+        if (status == 2){
+            return "Approved";
+        } else if (status == 1){
+            return "Pending";
+        } else {
+            return "Rejected";
+        }
+    }
+
+    public String getFromUsername() {
+        return fromUsername;
+    }
+
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
+    }
+
+    public String getToUsername() {
+        return toUsername;
+    }
+
+    public void setToUsername(String toUsername) {
+        this.toUsername = toUsername;
+    }
 
     public Long getTransferID() {
         return transferID;
@@ -71,11 +107,8 @@ public class Transfer {
         this.amount = amount;
     }
 
-
-
     public String toString(){
-        return "Transfer id: " + transferID + " - transfer type: " + transferTypeID + " - transfer status: " +
-                transferStatusID + " - from account number " + accountFrom + " to account number " + accountTo +
-                "for $" + amount;
+        return "Transfer id: " + transferID + " (" + getStatusWord(transferStatusID) + ") Account number " + accountFrom +
+                " " + getTypeWord(transferTypeID) + " $" + amount + " to account number " + accountTo;
     }
 }

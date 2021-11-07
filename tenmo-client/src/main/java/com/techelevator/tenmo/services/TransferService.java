@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
@@ -55,19 +56,18 @@ public class TransferService {
         return balance;
     }
 
-    private User[] viewTransferHistory() {
-        User[] users = null;
+    public Transfer[] viewTransferHistory() {
+        Transfer[] history = null;
         try {
-            ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "user", HttpMethod.GET,
-                    makeAuthEntity(), User[].class);
-            users = response.getBody();
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.GET,
+                    makeAuthEntity(), Transfer[].class);
+            history = response.getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException ex) {
             System.out.println(ex.getMessage());
         }
-        return users;
-
+        return history;
     }
 
     private HttpEntity<Void> makeAuthEntity() {
