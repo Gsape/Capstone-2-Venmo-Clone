@@ -55,6 +55,21 @@ public class TransferService {
         return balance;
     }
 
+    private User[] viewTransferHistory() {
+        User[] users = null;
+        try {
+            ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "user", HttpMethod.GET,
+                    makeAuthEntity(), User[].class);
+            users = response.getBody();
+        } catch (RestClientResponseException e) {
+            System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
+        } catch (ResourceAccessException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return users;
+
+    }
+
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
