@@ -3,6 +3,7 @@ package com.techelevator;
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
 import com.techelevator.tenmo.dao.JdbcUserDao;
+import com.techelevator.tenmo.exception.IllegalTransactionException;
 import com.techelevator.tenmo.model.Account;
 import org.junit.After;
 import org.junit.Assert;
@@ -46,7 +47,8 @@ public class TestJdbcTransferDao {
             BigDecimal expected = BigDecimal.valueOf(1010);
         // act
             // deposit method
-            BigDecimal actual = sut.deposit(test1ID, BigDecimal.valueOf(10.00));
+        BigDecimal actual = new BigDecimal(0);
+            actual = sut.deposit(test1ID, BigDecimal.valueOf(10.00));
         // assert
             // comparing BigDec to result of the method
         Assert.assertEquals(expected, actual);

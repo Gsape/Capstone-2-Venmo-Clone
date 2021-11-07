@@ -83,14 +83,14 @@ public class JdbcTransferDao implements TransferDao{
         // calculate new balance
         BigDecimal newBalance = account.getBalance().add(amount);
         // update database
-        String sql = "UPDATE accounts SET balance = ? WHERE user_id = ?";
-        try {
-            int success = jdbcTemplate.update(sql, newBalance, accountId);
-        } catch (DataAccessException e) {
-            return null;
-        }
+        String sql = "UPDATE accounts SET balance = ? WHERE account_id = ? RETURNING balance";
+        BigDecimal returnBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, newBalance, accountId);
         // confirm that db balance is equal to new balance
-        return account.getBalance();
+        if (returnBalance.compareTo(newBalance)==0){
+            return newBalance;
+        }
+        BigDecimal error = BigDecimal.valueOf(0);
+        return error;
     }
 
     @Override
@@ -104,16 +104,17 @@ public class JdbcTransferDao implements TransferDao{
             return null; // actually I want this to throw an exception or something, essentially prevent it from happening
         }
         // calculate new balance
-        BigDecimal newBalance = account.getBalance().subtract(amount);
+        BigDecimal newBalance = account.getBalance();
+        newBalance= newBalance.subtract(amount);
         // update database
-        String sql = "UPDATE accounts SET balance = ? WHERE user_id = ?";
-        try {
-            int success = jdbcTemplate.update(sql, newBalance, accountId);
-        } catch (DataAccessException e) {
-            return null;
-        }
+        String sql = "UPDATE accounts SET balance = ? WHERE account_id = ? RETURNING balance";
+        BigDecimal returnBalance = jdbcTemplate.queryForObject(sql, BigDecimal.class, newBalance, accountId);
         // confirm that db balance is equal to new balance
-        return account.getBalance();
+        if (returnBalance.compareTo(newBalance)==0){
+            return newBalance;
+        }
+        BigDecimal error = BigDecimal.valueOf(0);
+        return error;
     }
 
     @Override

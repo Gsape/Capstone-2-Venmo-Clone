@@ -71,8 +71,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		transferService.balance();
-		
+    	System.out.println("Your current TEBucks balance is: $" + transferService.balance());
+		System.out.println("What would you like to do next?");
 	}
 
 	private void viewTransferHistory() {
@@ -86,7 +86,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		transferService.listUsers();
+		System.out.println(transferService.listUsers());
 		
 	}
 
@@ -104,6 +104,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			String choice = (String)console.getChoiceFromOptions(LOGIN_MENU_OPTIONS);
 			if (LOGIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
+				transferService.setAuthToken(currentUser.getToken());
 			} else if (LOGIN_MENU_OPTION_REGISTER.equals(choice)) {
 				register();
 			} else {
