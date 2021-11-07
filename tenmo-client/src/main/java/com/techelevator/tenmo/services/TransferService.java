@@ -41,6 +41,7 @@ public class TransferService {
     }
 
     public BigDecimal balance() {
+        System.out.println();
         BigDecimal balance = null;
         try {
             ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "account", HttpMethod.GET,
