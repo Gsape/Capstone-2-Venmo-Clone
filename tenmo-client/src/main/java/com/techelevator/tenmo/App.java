@@ -9,6 +9,9 @@ import com.techelevator.tenmo.services.AuthenticationServiceException;
 import com.techelevator.tenmo.services.TransferService;
 import com.techelevator.view.ConsoleService;
 
+import java.math.BigDecimal;
+import java.util.Scanner;
+
 public class App {
 
 private static final String API_BASE_URL = "http://localhost:8080/";
