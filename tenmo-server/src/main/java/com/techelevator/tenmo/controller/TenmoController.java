@@ -79,6 +79,9 @@ public class TenmoController {
         int recipientId = userDao.findIdByUsername(toUser);
         Long accountTo = accountDao.getAccountIdFromUserId(recipientId);
         int transferId = transferDao.send(amount, accountFrom, accountTo);
+        if (transferId == 0){
+            return "Please enter valid transfer information.";
+        }
         return "Success! Your transfer id is: " + transferId;
     }
 

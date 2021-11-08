@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
@@ -17,7 +18,7 @@ public class TransferService {
     private final RestTemplate restTemplate = new RestTemplate();
     //there is not what we know as a "console service" because the app
     // is handling the cli somehow so I'm not sure what to do
-    private AuthenticatedUser currentUser;
+//    private AuthenticatedUser currentUser;
     private String authToken = null;
 
     public TransferService(String url) {
@@ -58,43 +59,46 @@ public class TransferService {
         return balance;
     }
 
-    private User[] viewTransferHistory() {
-        User[] users = null;
+    public Transfer[] viewTransferHistory() {
+        Transfer[] history = null;
         try {
-            ResponseEntity<User[]> response = restTemplate.exchange(baseUrl + "user", HttpMethod.GET,
-                    makeAuthEntity(), User[].class);
-            users = response.getBody();
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.GET,
+                    makeAuthEntity(), Transfer[].class);
+            history = response.getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException ex) {
             System.out.println(ex.getMessage());
         }
-        return users;
-
+        return history;
     }
-    public void sendBucks() {
-        Transfer transfer = new Transfer();
-        System.out.println("Enter ID of user you are sending to (0 to cancel): ");
+    public void sendBucks(AuthenticatedUser currentUser) {
+        TransferDTO sendThis = new TransferDTO();
+        System.out.println("Enter username you are sending to (0 to cancel): ");
         Scanner scanner = new Scanner(System.in);
-        transfer.setAccountTo(Long.parseLong(scanner.nextLine()));
-
-        if(transfer.getAccountTo() != 0){
+        sendThis.setToUser(scanner.nextLine());
+        sendThis.setFromUser(currentUser.getUser().getUsername());
+        if(sendThis.getToUser() != null){
             System.out.println("Amount to send: ");
             try {
-                transfer.setAmount(new BigDecimal(Double.parseDouble(scanner.nextLine())));
+                BigDecimal amount = new BigDecimal(Double.parseDouble(scanner.nextLine()));
+                if (amount == null || amount.equals(0.00) || amount.compareTo(BigDecimal.ZERO)<0) {
+                    System.out.println("ERROR");
+                }
+                sendThis.setAmount(amount);
             } catch (NumberFormatException e) {
                 System.out.println("ERROR");
             }
-            String response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(transfer), String.class).getBody();
+            String response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(sendThis), String.class).getBody();
             System.out.println(response);
         }
     }
 
-    private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
+    private HttpEntity<TransferDTO> makeTransferEntity(TransferDTO transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authToken);
-        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+        HttpEntity<TransferDTO> entity = new HttpEntity<>(transfer, headers);
         return entity;
     }
 

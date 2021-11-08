@@ -63,11 +63,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
 			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
-				sendBucks();
+				sendBucks(currentUser);
 			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
 				requestBucks();
 			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
+				transferService.setAuthToken(currentUser.getToken());
 			} else {
 				// the only other option on the main menu is to exit
 				exitProgram();
@@ -77,32 +78,39 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewCurrentBalance() {
     	System.out.println("Your current TEBucks balance is: $" + transferService.balance());
-		System.out.println("What would you like to do next?");
+		System.out.println();
+    	System.out.println("What would you like to do next?");
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		Transfer[] results = transferService.viewTransferHistory();
+		for (Transfer element : results){
+			System.out.println(element.toString());
+		}
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("This feature is not active at this time.");
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 
-	private void sendBucks() {
+	private void sendBucks(AuthenticatedUser currentUser) {
 		User[] results = transferService.listUsers();
 		for (User element : results){
 			Integer id = element.getId();
 			String name = element.getUsername();
 			System.out.println(id + ": " + name);
 		}
-		
+		transferService.sendBucks(currentUser);
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("This feature is not active at this time.");
+		System.out.println();
+		System.out.println("What would you like to do next?");
 	}
 	
 	private void exitProgram() {

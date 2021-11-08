@@ -21,7 +21,25 @@ public class Transfer {
     }
 
     public Transfer(){
-    };
+    }
+
+    public String getTypeWord(int type){
+        if (type == 2){
+            return "sent";
+        } else {
+            return "requested";
+        }
+    }
+
+    public String getStatusWord(int status){
+        if (status == 2){
+            return "Approved";
+        } else if (status == 1){
+            return "Pending";
+        } else {
+            return "Rejected";
+        }
+    }
 
     public Long getTransferID() {
         return transferID;
@@ -71,11 +89,8 @@ public class Transfer {
         this.amount = amount;
     }
 
-
-
     public String toString(){
-        return "Transfer id: " + transferID + " - transfer type: " + transferTypeID + " - transfer status: " +
-                transferStatusID + " - from account number " + accountFrom + " to account number " + accountTo +
-                "for $" + amount;
+        return "Transfer id: " + transferID + " (" + getStatusWord(transferStatusID) + ") Account number " + accountFrom +
+                " " + getTypeWord(transferTypeID) + " $" + amount + " to account number " + accountTo;
     }
 }
