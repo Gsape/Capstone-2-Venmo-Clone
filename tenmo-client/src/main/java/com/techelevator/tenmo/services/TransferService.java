@@ -74,14 +74,18 @@ public class TransferService {
     }
     public void sendBucks(AuthenticatedUser currentUser) {
         TransferDTO sendThis = new TransferDTO();
-        System.out.println("Enter ID of user you are sending to (0 to cancel): ");
+        System.out.println("Enter username you are sending to (0 to cancel): ");
         Scanner scanner = new Scanner(System.in);
         sendThis.setToUser(scanner.nextLine());
         sendThis.setFromUser(currentUser.getUser().getUsername());
         if(sendThis.getToUser() != null){
             System.out.println("Amount to send: ");
             try {
-                sendThis.setAmount(new BigDecimal(Double.parseDouble(scanner.nextLine())));
+                BigDecimal amount = new BigDecimal(Double.parseDouble(scanner.nextLine()));
+                if (amount == null || amount.equals(0.00) || amount.compareTo(BigDecimal.ZERO)<0) {
+                    System.out.println("ERROR");
+                }
+                sendThis.setAmount(amount);
             } catch (NumberFormatException e) {
                 System.out.println("ERROR");
             }
