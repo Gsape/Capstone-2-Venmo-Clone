@@ -64,8 +64,12 @@ public class TenmoController {
     // POST new transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public String sendNewTransfer(@RequestBody TransferDTO transferDTO){
+    public String sendNewTransfer(@RequestBody TransferDTO transferDTO, Principal user){
         String fromUser = transferDTO.getFromUser();
+        String principal = user.getName();
+        if (!fromUser.equals(principal)){
+            return "You may only transfer money from your own account.";
+        }
         String toUser = transferDTO.getToUser();
         BigDecimal amount = transferDTO.getAmount();
         if (fromUser == null){
