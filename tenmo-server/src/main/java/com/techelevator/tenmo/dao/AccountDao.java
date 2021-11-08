@@ -16,6 +16,5 @@ public interface AccountDao {
 
     BigDecimal getBalance(long accountId) throws AccountNotFoundException;
 
-    //void updateBalance(long accountId, Account account); // maybe make a boolean to see if it was successful
 
 }

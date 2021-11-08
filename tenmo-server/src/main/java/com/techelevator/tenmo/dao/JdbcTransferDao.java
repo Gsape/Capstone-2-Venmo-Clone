@@ -44,16 +44,6 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public boolean request() {
-        // if approved
-        // deduct from other account
-        //deposit into requestor's account
-        String sql = "";
-
-        return false;
-    }
-
-    @Override
     public String approve(Long transferId, int code) {
         // change transfer status in transfer table of db to approved
         Transfer transfer = new Transfer();

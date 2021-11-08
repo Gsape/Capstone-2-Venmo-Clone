@@ -32,7 +32,7 @@ public class TenmoController {
     }
 
     //find all users
-    @RequestMapping (path = "/user", method = RequestMethod.GET) // "value" is used in authentication controller and not "path"
+    @RequestMapping (path = "/user", method = RequestMethod.GET)
         public List<User> listOfUsers(){
             return userDao.findAll();
         }

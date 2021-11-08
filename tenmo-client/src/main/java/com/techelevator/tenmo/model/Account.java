@@ -8,7 +8,6 @@ public class Account {
     private Long userId;
     private BigDecimal balance;
 
-    //need explain
     public Account() { }
 
     public Account(Long accountId, Long userId, BigDecimal balance){
