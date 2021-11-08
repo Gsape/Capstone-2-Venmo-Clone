@@ -16,9 +16,6 @@ public class TransferService {
 
     private final String baseUrl;
     private final RestTemplate restTemplate = new RestTemplate();
-    //there is not what we know as a "console service" because the app
-    // is handling the cli somehow so I'm not sure what to do
-//    private AuthenticatedUser currentUser;
     private String authToken = null;
 
     public TransferService(String url) {
@@ -74,12 +71,12 @@ public class TransferService {
     }
     public void sendBucks(AuthenticatedUser currentUser) {
         TransferDTO sendThis = new TransferDTO();
-        System.out.println("Enter username you are sending to (0 to cancel): ");
+        System.out.println("Enter a username that you would like to send to: ");
         Scanner scanner = new Scanner(System.in);
         sendThis.setToUser(scanner.nextLine());
         sendThis.setFromUser(currentUser.getUser().getUsername());
         if(sendThis.getToUser() != null){
-            System.out.println("Amount to send: ");
+            System.out.println("Amount of TEbucks: ");
             try {
                 BigDecimal amount = new BigDecimal(Double.parseDouble(scanner.nextLine()));
                 if (amount == null || amount.equals(0.00) || amount.compareTo(BigDecimal.ZERO)<0) {

@@ -50,7 +50,7 @@ public class JdbcAccountDao implements AccountDao {
        if( id != null) {
            return id;
        } else {
-           return (long) -1; // unsure of this, maybe make int value instead
+           return (long) -1;
        }
     }
 
@@ -63,12 +63,6 @@ public class JdbcAccountDao implements AccountDao {
         }
         return amount;
     }
-
-//    @Override
-//    public void updateBalance(long accountId, Account account) {
-//        String sql = "UPDATE accounts SET balance WHERE account_id = ?;";
-//        jdbcTemplate.update(sql, account.getBalance()); // I feel like this is wrong
-//    }
 
     private Account mapRowToAccount(SqlRowSet asr) {
         Account account = new Account();

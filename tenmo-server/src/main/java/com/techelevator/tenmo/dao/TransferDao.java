@@ -9,7 +9,6 @@ import java.util.List;
 public interface TransferDao {
 
     int send(BigDecimal amount, Long accountFrom, Long accountTo);
-    boolean request();
     String approve(Long transferId, int code);
     BigDecimal deposit(Long accountId, BigDecimal amount) throws IllegalTransactionException;
     BigDecimal deduct(Long accountId, BigDecimal amount);

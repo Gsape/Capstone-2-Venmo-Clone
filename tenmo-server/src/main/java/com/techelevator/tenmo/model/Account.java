@@ -12,7 +12,6 @@ public class Account {
     @NotEmpty
     private BigDecimal balance;
 
-    //need explain
     public Account() { }
 
     public Account(Long accountId, Long userId, BigDecimal balance){
